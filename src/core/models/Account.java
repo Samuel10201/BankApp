@@ -56,4 +56,10 @@ public class Account {
         return true;
     }
     */
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+    
+    
 }

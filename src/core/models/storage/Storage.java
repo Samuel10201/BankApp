@@ -46,13 +46,40 @@ public class Storage {
     public ArrayList<User> getUsers() {
         return users;
     }
-
+    
+    public int addAccount(int idAccount){
+        // 0 no hay problema, 1 el id de la cuenta ya existe,  2 el usuario al que se le quiere asignar la cuenta no existe
+        Account account = this.getAccount(idAccount);
+        for(Account acc : this.accounts){
+            if (acc.getId() == account.getId() ) {
+                return 1;
+            }
+        }
+        int sw = 0;
+        for(User user : this.users){
+            if (user.getId() == account.getOwner().getId()) {
+                sw = 1;
+            }
+        }
+        if(sw == 0){
+            return 2;
+        }
+        
+        this.accounts.add(account);
+        return 0;
+    }
+    
+    public Account getAccount(int id){
+        for(Account account : this.accounts){
+            if(Integer.parseInt(account.getId()) == id){
+                return account;
+            }
+        }
+        return null;
+    }
+    
     public ArrayList<Account> getAccounts() {
         return accounts;
-    }
-
-    public ArrayList<Transaction> getTransactions() {
-        return transactions;
     }
     
     public boolean Deposit(Transaction transaction){
@@ -60,5 +87,7 @@ public class Storage {
         return true;
     }
     
-    
+    public ArrayList<Transaction> getTransactions() {
+        return transactions;
+    }
 }

@@ -55,6 +55,7 @@ public class TransactionController {
                 return new Response("Destination account does not exists",Status.BAD_REQUEST);
             }
             
+            destinationAccount.setBalance(destinationAccount.getBalance()+amountDouble);
             storage.Deposit(new Transaction(type,null,destinationAccount,amountDouble));
             return new Response ("Successfull deposit",Status.OK);
             

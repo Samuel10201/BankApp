@@ -4,6 +4,7 @@
  */
 package core.views;
 
+import core.controllers.AccountController;
 import core.controllers.TransactionController;
 import core.controllers.UserController;
 import core.controllers.utils.Response;
@@ -11,6 +12,7 @@ import core.models.TransactionType;
 import core.models.Transaction;
 import core.models.Account;
 import core.models.User;
+import core.models.storage.Storage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -23,7 +25,6 @@ import javax.swing.table.DefaultTableModel;
  */
 public class BankFrame extends javax.swing.JFrame {
     //Eliminar esto pq no cumple con Solid y MVC
-    private ArrayList<Account> accounts;
     private ArrayList<Transaction> transactions;
     
     /**
@@ -552,6 +553,7 @@ public class BankFrame extends javax.swing.JFrame {
     private void CreateAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAccountActionPerformed
         // TODO add your handling code here:
         try {
+            /*
             int userId = Integer.parseInt(jTextField5.getText());
             double initialBalance = Double.parseDouble(jTextField6.getText());
             
@@ -576,7 +578,13 @@ public class BankFrame extends javax.swing.JFrame {
                 
                 jTextField5.setText("");
                 jTextField6.setText("");
-            }
+            }*/
+            
+            Response response = AccountController.createAccount(jTextField5.getText(), jTextField6.getText());
+            
+            jTextField5.setText("");
+            jTextField6.setText("");
+            
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -686,9 +694,10 @@ public class BankFrame extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
         
-        this.accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
+        ArrayList<Account> accounts = AccountController.refreshAccounts();
+        accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
         
-        for (Account account : this.accounts) {
+        for (Account account : accounts) {
             model.addRow(new Object[]{account.getId(), account.getOwner().getId(), account.getBalance()});
         }
     }//GEN-LAST:event_RefreshAccountsActionPerformed
