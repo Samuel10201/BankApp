@@ -2,8 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package bank;
+package core.views;
 
+import core.controllers.TransactionController;
+import core.controllers.UserController;
+import core.controllers.utils.Response;
+import core.models.TransactionType;
+import core.models.Transaction;
+import core.models.Account;
+import core.models.User;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -15,19 +22,15 @@ import javax.swing.table.DefaultTableModel;
  * @author edangulo
  */
 public class BankFrame extends javax.swing.JFrame {
-    
+    //Eliminar esto pq no cumple con Solid y MVC
     private ArrayList<Account> accounts;
     private ArrayList<Transaction> transactions;
-    private ArrayList<User> users;
     
     /**
      * Creates new form BankFrame
      */
     public BankFrame() {
         initComponents();
-        this.accounts = new ArrayList<>();
-        this.transactions = new ArrayList<>();
-        this.users = new ArrayList<>();
     }
 
     /**
@@ -50,14 +53,14 @@ public class BankFrame extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        RegisterUser = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        CreateAccount = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -68,22 +71,22 @@ public class BankFrame extends javax.swing.JFrame {
         jTextField8 = new javax.swing.JTextField();
         jTextField9 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
-        jButton3 = new javax.swing.JButton();
+        MakeTransaction = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton4 = new javax.swing.JButton();
+        RefreshUsers = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        jButton5 = new javax.swing.JButton();
+        RefreshAccounts = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
-        jButton6 = new javax.swing.JButton();
+        RefreshTransactions = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -102,11 +105,11 @@ public class BankFrame extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setText("Age");
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jButton1.setText("Register");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        RegisterUser.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        RegisterUser.setText("Register");
+        RegisterUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                RegisterUserActionPerformed(evt);
             }
         });
 
@@ -136,7 +139,7 @@ public class BankFrame extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(259, 259, 259)
-                .addComponent(jButton1)
+                .addComponent(RegisterUser)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -161,7 +164,7 @@ public class BankFrame extends javax.swing.JFrame {
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(RegisterUser)
                 .addContainerGap(83, Short.MAX_VALUE))
         );
 
@@ -176,11 +179,11 @@ public class BankFrame extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel8.setText("Initial Balance");
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jButton2.setText("Create");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        CreateAccount.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        CreateAccount.setText("Create");
+        CreateAccount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                CreateAccountActionPerformed(evt);
             }
         });
 
@@ -205,7 +208,7 @@ public class BankFrame extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(265, 265, 265)
-                .addComponent(jButton2)
+                .addComponent(CreateAccount)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -222,7 +225,7 @@ public class BankFrame extends javax.swing.JFrame {
                     .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addGap(18, 18, 18)
-                .addComponent(jButton2)
+                .addComponent(CreateAccount)
                 .addContainerGap(163, Short.MAX_VALUE))
         );
 
@@ -247,11 +250,11 @@ public class BankFrame extends javax.swing.JFrame {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Deposit", "Withdraw", "Transfer" }));
 
-        jButton3.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jButton3.setText("Execute");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        MakeTransaction.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        MakeTransaction.setText("Execute");
+        MakeTransaction.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                MakeTransactionActionPerformed(evt);
             }
         });
 
@@ -280,7 +283,7 @@ public class BankFrame extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(255, 255, 255)
-                .addComponent(jButton3)
+                .addComponent(MakeTransaction)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -305,7 +308,7 @@ public class BankFrame extends javax.swing.JFrame {
                     .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13))
                 .addGap(18, 18, 18)
-                .addComponent(jButton3)
+                .addComponent(MakeTransaction)
                 .addContainerGap(83, Short.MAX_VALUE))
         );
 
@@ -335,11 +338,11 @@ public class BankFrame extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jTable1);
 
-        jButton4.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jButton4.setText("Refresh");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        RefreshUsers.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        RefreshUsers.setText("Refresh");
+        RefreshUsers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                RefreshUsersActionPerformed(evt);
             }
         });
 
@@ -357,7 +360,7 @@ public class BankFrame extends javax.swing.JFrame {
                         .addGap(62, 62, 62)
                         .addComponent(jLabel14)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4)
+                        .addComponent(RefreshUsers)
                         .addGap(88, 88, 88))))
         );
         jPanel4Layout.setVerticalGroup(
@@ -366,7 +369,7 @@ public class BankFrame extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
-                    .addComponent(jButton4))
+                    .addComponent(RefreshUsers))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                 .addContainerGap())
@@ -398,11 +401,11 @@ public class BankFrame extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(jTable2);
 
-        jButton5.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jButton5.setText("Refresh");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        RefreshAccounts.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        RefreshAccounts.setText("Refresh");
+        RefreshAccounts.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                RefreshAccountsActionPerformed(evt);
             }
         });
 
@@ -418,7 +421,7 @@ public class BankFrame extends javax.swing.JFrame {
                 .addGap(66, 66, 66)
                 .addComponent(jLabel15)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton5)
+                .addComponent(RefreshAccounts)
                 .addGap(90, 90, 90))
         );
         jPanel5Layout.setVerticalGroup(
@@ -427,7 +430,7 @@ public class BankFrame extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15)
-                    .addComponent(jButton5))
+                    .addComponent(RefreshAccounts))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                 .addContainerGap())
@@ -466,11 +469,11 @@ public class BankFrame extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable3);
 
-        jButton6.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jButton6.setText("Refresh");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        RefreshTransactions.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        RefreshTransactions.setText("Refresh");
+        RefreshTransactions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                RefreshTransactionsActionPerformed(evt);
             }
         });
 
@@ -486,7 +489,7 @@ public class BankFrame extends javax.swing.JFrame {
                 .addGap(64, 64, 64)
                 .addComponent(jLabel16)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton6)
+                .addComponent(RefreshTransactions)
                 .addGap(89, 89, 89))
         );
         jPanel6Layout.setVerticalGroup(
@@ -495,7 +498,7 @@ public class BankFrame extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
-                    .addComponent(jButton6))
+                    .addComponent(RefreshTransactions))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                 .addContainerGap())
@@ -517,33 +520,45 @@ public class BankFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void RegisterUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterUserActionPerformed
         // TODO add your handling code here:
         try {
-            int id = Integer.parseInt(jTextField1.getText());
+            String id = (jTextField1.getText());
             String firstname = jTextField2.getText();
             String lastname = jTextField3.getText();
-            int age = Integer.parseInt(jTextField4.getText());
+            String age = (jTextField4.getText());
             
-            this.users.add(new User(id, firstname, lastname, age));
+            Response response = UserController.RegisterUser(id, firstname, lastname, age);
+            
+            
+            if (response.getStatus() >= 500) {
+                JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+            } else if (response.getStatus() >= 400) {
+                JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+            }
             
             jTextField1.setText("");
             jTextField2.setText("");
             jTextField3.setText("");
             jTextField4.setText("");
+            
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_RegisterUserActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void CreateAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAccountActionPerformed
         // TODO add your handling code here:
         try {
             int userId = Integer.parseInt(jTextField5.getText());
             double initialBalance = Double.parseDouble(jTextField6.getText());
             
             User selectedUser = null;
-            for (User user : this.users) {
+            
+            ArrayList<User> users = UserController.RefreshUsers();
+            for (User user : users) {
                 if (user.getId() == userId && selectedUser == null) {
                     selectedUser = user;
                 }
@@ -565,32 +580,32 @@ public class BankFrame extends javax.swing.JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_CreateAccountActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void MakeTransactionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MakeTransactionActionPerformed
         // TODO add your handling code here:
         try {
             String type = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
             switch (type) {
                 case "Deposit": {
+                    String sourceAccountId = jTextField7.getText();
                     String destinationAccountId = jTextField8.getText();
-                    double amount = Double.parseDouble(jTextField9.getText());
+                    String amount = (jTextField9.getText());
                     
-                    Account destinationAccount = null;
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(destinationAccountId)) {
-                            destinationAccount = account;
-                        }
+                    Response response = TransactionController.Deposit(TransactionType.DEPOSIT, null, destinationAccountId, amount);
+                    
+                    if (response.getStatus() >= 500) {
+                        JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+                    } else if (response.getStatus() >= 400) {
+                        JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
                     }
-                    if (destinationAccount != null) {
-                        destinationAccount.deposit(amount);
-                        
-                        this.transactions.add(new Transaction(TransactionType.DEPOSIT, null, destinationAccount, amount));
-                        
-                        jTextField7.setText("");
-                        jTextField8.setText("");
-                        jTextField9.setText("");
-                    }
+                    
+                    jTextField7.setText("");
+                    jTextField8.setText("");
+                    jTextField9.setText("");
+                    
                     break;
                 }
                 case "Withdraw": {
@@ -650,21 +665,23 @@ public class BankFrame extends javax.swing.JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_MakeTransactionActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void RefreshUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshUsersActionPerformed
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
         
-        this.users.sort((obj1, obj2) -> (obj1.getId() - obj2.getId()));
+        ArrayList<User> users = UserController.RefreshUsers();
+        users.sort((obj1, obj2) -> (obj1.getId() - obj2.getId()));
         
-        for (User user : this.users) {
+        for (User user : users) {
+
             model.addRow(new Object[]{user.getId(), user.getFirstname() + " " + user.getLastname(), user.getAge(), user.getNumAccounts()});
         }
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_RefreshUsersActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void RefreshAccountsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshAccountsActionPerformed
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
@@ -674,20 +691,20 @@ public class BankFrame extends javax.swing.JFrame {
         for (Account account : this.accounts) {
             model.addRow(new Object[]{account.getId(), account.getOwner().getId(), account.getBalance()});
         }
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_RefreshAccountsActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void RefreshTransactionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshTransactionsActionPerformed
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
         model.setRowCount(0);
-        
-        ArrayList<Transaction> transactionsCopy = (ArrayList<Transaction>) this.transactions.clone();
+        ArrayList<Transaction> transactions = TransactionController.RefreshTransaction();
+        ArrayList<Transaction> transactionsCopy = (ArrayList<Transaction>) transactions.clone();
         Collections.reverse(transactionsCopy);
         
         for (Transaction transaction : transactionsCopy) {
             model.addRow(new Object[]{transaction.getType().name(), (transaction.getSourceAccount() != null ? transaction.getSourceAccount().getId() : "None"), (transaction.getDestinationAccount()!= null ? transaction.getDestinationAccount().getId() : "None"), transaction.getAmount()});
         }
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_RefreshTransactionsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -725,12 +742,12 @@ public class BankFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
+    private javax.swing.JButton CreateAccount;
+    private javax.swing.JButton MakeTransaction;
+    private javax.swing.JButton RefreshAccounts;
+    private javax.swing.JButton RefreshTransactions;
+    private javax.swing.JButton RefreshUsers;
+    private javax.swing.JButton RegisterUser;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

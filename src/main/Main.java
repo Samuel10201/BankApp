@@ -2,14 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package bank;
+package main;
 
 /**
  *
- * @author edangulo
+ * @author bjose
  */
-public enum TransactionType {
-    DEPOSIT,
-    WITHDRAW,
-    TRANSFER
+public class Main {
+    public static void main(String args[]) {
+        
+    }
 }
