@@ -5,6 +5,7 @@
 package core.views;
 
 import core.controllers.AccountController;
+import core.controllers.utils.Response;
 import core.models.Account;
 import core.models.Transaction;
 import core.models.TransactionType;
@@ -538,10 +539,26 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        Storage storage = Storage.getInstance();
-        AccountController.createAccount(jTextField5.getText(), jTextField6.getText());
-        jTextField5.setText("");
-        jTextField6.setText("");
+        try{
+            String userId = jTextField5.getText();
+            String initialBalance = jTextField6.getText();
+
+            Storage storage = Storage.getInstance();
+            Response response = AccountController.createAccount(userId, initialBalance);
+            if (response.getStatus() >= 500) {
+                JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+            } else if (response.getStatus() >= 400) {
+                JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+            jTextField5.setText("");
+            jTextField6.setText("");
+            
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed

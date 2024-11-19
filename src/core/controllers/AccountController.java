@@ -20,6 +20,11 @@ public class AccountController {
         try{
             int userIdInt;
             double initialBalanceDouble;
+            
+            if(userId.equals("")){
+                return new Response("Id must not be empty", Status.BAD_REQUEST);
+            }
+            
             try{
                 userIdInt = Integer.parseInt(userId);
                 if(userIdInt < 0){
@@ -33,6 +38,11 @@ public class AccountController {
                 return new Response("Id must be numeric", Status.BAD_REQUEST);
             }
             
+            
+            if(initialBalance.equals("")){
+                return new Response("Initial balance must not be empty", Status.BAD_REQUEST);
+            }
+            
             try{
                 initialBalanceDouble = Double.parseDouble(initialBalance);
                 if(initialBalanceDouble < 0){
@@ -42,15 +52,9 @@ public class AccountController {
                     return new Response("Initial balance most be more than 0", Status.BAD_REQUEST);
                 }
             }catch(NumberFormatException ex){
-                return new Response("Id must be numeric", Status.BAD_REQUEST);
-            }
-            if(userId.equals("")){
-                return new Response("Id must not be empty", Status.BAD_REQUEST);
+                return new Response("Initial balance must be numeric", Status.BAD_REQUEST);
             }
             
-            if(initialBalance.equals("")){
-                return new Response("initialBalance must not be empty", Status.BAD_REQUEST);
-            }
             
             
             Storage storage = Storage.getInstance();
