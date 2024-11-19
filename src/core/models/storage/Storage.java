@@ -29,24 +29,21 @@ public class Storage {
         return instance;
     }
     
-    public int addAccount(int idAccount){
-        // 0 no hay problema, 1 el id de la cuenta ya existe,  2 el usuario al que se le quiere asignar la cuenta no existe
-        Account account = this.getAccount(idAccount);
-        for(Account acc : this.accounts){
-            if (acc.getId() == account.getId() ) {
-                return 1;
-            }
-        }
+    
+    
+    //Account
+    public int addAccount(String idAccount ,String idUsuario, double initialBalance){      
+        // 0 = correcto, 1 = El id de cuenta ya existe, 2 = el usuario no existe
         int sw = 0;
         for(User user : this.users){
-            if (user.getId() == account.getOwner().getId()) {
+            if (user.getId() == Integer.parseInt(idUsuario)) {
                 sw = 1;
             }
         }
         if(sw == 0){
             return 2;
         }
-        
+        Account account = new Account(idAccount,this.getUser(Integer.parseInt(idUsuario)),initialBalance);
         this.accounts.add(account);
         return 0;
     }
@@ -61,7 +58,32 @@ public class Storage {
     }
     
     public ArrayList<Account> getAccounts(){
-        return this.getAccounts();
+        return this.accounts;
+    }
+    
+    
+    //Users
+    public boolean RegisterUser(User user){
+        for (User u : this.users) {
+            if (user.getId() == user.getId()) {
+                return false;
+            }
+        }
+        this.users.add(user); 
+        return true;
+    }
+
+    public ArrayList<User> getUsers() {
+        return users;
+    }
+    
+    public User getUser(int id){
+        for(User user : this.users){
+            if (user.getId() == id) {
+                return user;
+            }
+        }
+        return null;
     }
 }
 

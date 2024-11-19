@@ -16,6 +16,11 @@ public class Account {
     private User owner;
     private double balance;
 
+    public Account(User owner) {
+        this.owner = owner;
+    }
+
+    
     public Account(String id, User owner) {
         this.id = id;
         this.owner = owner;

@@ -58,19 +58,24 @@ public class AccountController {
             
             
             Storage storage = Storage.getInstance();
-            if(storage.addAccount(userIdInt) == 1){
-                return new Response("An account with that id already exists", Status.BAD_REQUEST);
+            
+            Random random = new Random();
+            int first = random.nextInt(1000);
+            int second = random.nextInt(1000000);
+            int third = random.nextInt(100);
+            String accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
+            
+            int valid = storage.addAccount(accountId, userId, initialBalanceDouble);
+            
+            if(valid == 1){
+                return new Response("The id of that account already exists", Status.BAD_REQUEST);
             }
-            if(storage.addAccount(userIdInt) == 2){
+            
+            if(valid == 2){
                 return new Response("The user you want to assign the account do not exists", Status.BAD_REQUEST);
             }
-            if(storage.addAccount(userIdInt) == 0){
-                Random random = new Random();
-                int first = random.nextInt(1000);
-                int second = random.nextInt(1000000);
-                int third = random.nextInt(100);
-                String accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
-                
+            
+            if(valid == 0){
                 return new Response("Account created succesfully", Status.CREATED);
             }
             return new Response("Account created succesfully", Status.CREATED);

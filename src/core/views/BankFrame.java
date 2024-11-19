@@ -5,6 +5,7 @@
 package core.views;
 
 import core.controllers.AccountController;
+import core.controllers.UserController;
 import core.controllers.utils.Response;
 import core.models.Account;
 import core.models.Transaction;
@@ -521,17 +522,28 @@ public class BankFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         try {
-            int id = Integer.parseInt(jTextField1.getText());
+            String id = (jTextField1.getText());
             String firstname = jTextField2.getText();
             String lastname = jTextField3.getText();
-            int age = Integer.parseInt(jTextField4.getText());
+            String age = (jTextField4.getText());
             
-            this.users.add(new User(id, firstname, lastname, age));
+            Response response = UserController.RegisterUser(id, firstname, lastname, age);
             
-            jTextField1.setText("");
-            jTextField2.setText("");
-            jTextField3.setText("");
-            jTextField4.setText("");
+            
+            if (response.getStatus() >= 500) {
+                JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+            } else if (response.getStatus() >= 400) {
+                JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+                jTextField1.setText("");
+                jTextField2.setText("");
+                jTextField3.setText("");
+                jTextField4.setText("");
+            }
+            
+            
+            
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -539,26 +551,22 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        try{
-            String userId = jTextField5.getText();
-            String initialBalance = jTextField6.getText();
+        
+        String userId = jTextField5.getText();
+        String initialBalance = jTextField6.getText();
 
-            Storage storage = Storage.getInstance();
-            Response response = AccountController.createAccount(userId, initialBalance);
-            if (response.getStatus() >= 500) {
-                JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
-            } else if (response.getStatus() >= 400) {
-                JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
-            }
-            
+        Storage storage = Storage.getInstance();
+        Response response = AccountController.createAccount(userId, initialBalance);
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
             jTextField5.setText("");
             jTextField6.setText("");
-            
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
         }
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -651,9 +659,10 @@ public class BankFrame extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
         
-        this.users.sort((obj1, obj2) -> (obj1.getId() - obj2.getId()));
+        ArrayList<User> users = UserController.RefreshUsers();
+        users.sort((obj1, obj2) -> (obj1.getId() - obj2.getId()));
         
-        for (User user : this.users) {
+        for (User user : users) {
             model.addRow(new Object[]{user.getId(), user.getFirstname() + " " + user.getLastname(), user.getAge(), user.getNumAccounts()});
         }
     }//GEN-LAST:event_jButton4ActionPerformed
@@ -663,9 +672,10 @@ public class BankFrame extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
         
-        this.accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
+        ArrayList<Account> accounts = AccountController.refreshAccounts();
+        accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
         
-        for (Account account : this.accounts) {
+        for (Account account : accounts) {
             model.addRow(new Object[]{account.getId(), account.getOwner().getId(), account.getBalance()});
         }
     }//GEN-LAST:event_jButton5ActionPerformed
