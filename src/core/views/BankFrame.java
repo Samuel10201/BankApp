@@ -4,10 +4,12 @@
  */
 package core.views;
 
+import core.controllers.AccountController;
 import core.models.Account;
 import core.models.Transaction;
 import core.models.TransactionType;
 import core.models.User;
+import core.models.storage.Storage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -20,18 +22,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class BankFrame extends javax.swing.JFrame {
     
-    private ArrayList<Account> accounts;
-    private ArrayList<Transaction> transactions;
-    private ArrayList<User> users;
-    
     /**
      * Creates new form BankFrame
      */
     public BankFrame() {
         initComponents();
-        this.accounts = new ArrayList<>();
-        this.transactions = new ArrayList<>();
-        this.users = new ArrayList<>();
+
     }
 
     /**
@@ -542,33 +538,10 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        try {
-            int userId = Integer.parseInt(jTextField5.getText());
-            double initialBalance = Double.parseDouble(jTextField6.getText());
-            
-            User selectedUser = null;
-            for (User user : this.users) {
-                if (user.getId() == userId && selectedUser == null) {
-                    selectedUser = user;
-                }
-            }
-            
-            if (selectedUser != null) {
-                Random random = new Random();
-                int first = random.nextInt(1000);
-                int second = random.nextInt(1000000);
-                int third = random.nextInt(100);
-                
-                String accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
-                
-                this.accounts.add(new Account(accountId, selectedUser, initialBalance));
-                
-                jTextField5.setText("");
-                jTextField6.setText("");
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        Storage storage = Storage.getInstance();
+        AccountController.createAccount(jTextField5.getText(), jTextField6.getText());
+        jTextField5.setText("");
+        jTextField6.setText("");
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
