@@ -6,6 +6,7 @@ package core.models.storage;
 
 import core.models.Account;
 import core.models.Transaction;
+import core.models.TransactionType;
 import core.models.User;
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ public class Storage {
     private Storage() {
         this.users = new ArrayList<>();
         this.accounts = new ArrayList<>();
+        this.transactions = new ArrayList<>();
     }
     
     public static Storage getInstance() {
@@ -47,24 +49,27 @@ public class Storage {
         return users;
     }
     
-    public int addAccount(int idAccount){
-        // 0 no hay problema, 1 el id de la cuenta ya existe,  2 el usuario al que se le quiere asignar la cuenta no existe
-        Account account = this.getAccount(idAccount);
-        for(Account acc : this.accounts){
-            if (acc.getId() == account.getId() ) {
-                return 1;
+    public User getUser(int id){
+        for(User user : this.users){
+            if (user.getId() == id) {
+                return user;
             }
         }
+        return null;
+    }
+    
+    public int addAccount(String idAccount ,String idUsuario, double initialBalance){      
+        // 0 = correcto, 1 = El id de cuenta ya existe, 2 = el usuario no existe
         int sw = 0;
         for(User user : this.users){
-            if (user.getId() == account.getOwner().getId()) {
+            if (user.getId() == Integer.parseInt(idUsuario)) {
                 sw = 1;
             }
         }
         if(sw == 0){
             return 2;
         }
-        
+        Account account = new Account(idAccount,this.getUser(Integer.parseInt(idUsuario)),initialBalance);
         this.accounts.add(account);
         return 0;
     }
@@ -78,11 +83,22 @@ public class Storage {
         return null;
     }
     
-    public ArrayList<Account> getAccounts() {
+    public ArrayList<Account> getAccounts(){
         return accounts;
     }
+
     
     public boolean Deposit(Transaction transaction){
+        this.transactions.add(transaction);
+        return true;
+    }
+    
+    public boolean Withdraw(Transaction transaction){
+        this.transactions.add(transaction);
+        return true;
+    }
+    
+    public boolean Transfer(Transaction transaction){
         this.transactions.add(transaction);
         return true;
     }

@@ -523,156 +523,159 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void RegisterUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterUserActionPerformed
         // TODO add your handling code here:
-        try {
-            String id = (jTextField1.getText());
-            String firstname = jTextField2.getText();
-            String lastname = jTextField3.getText();
-            String age = (jTextField4.getText());
-            
-            Response response = UserController.RegisterUser(id, firstname, lastname, age);
-            
-            
-            if (response.getStatus() >= 500) {
-                JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
-            } else if (response.getStatus() >= 400) {
-                JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
-            }
-            
+        
+        String id = (jTextField1.getText());
+        String firstname = jTextField2.getText();
+        String lastname = jTextField3.getText();
+        String age = (jTextField4.getText());
+
+        Response response = UserController.RegisterUser(id, firstname, lastname, age);
+
+
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+
             jTextField1.setText("");
             jTextField2.setText("");
             jTextField3.setText("");
             jTextField4.setText("");
-            
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
         }
+            
+            
+            
+       
     }//GEN-LAST:event_RegisterUserActionPerformed
 
     private void CreateAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAccountActionPerformed
-        // TODO add your handling code here:
-        try {
-            /*
-            int userId = Integer.parseInt(jTextField5.getText());
-            double initialBalance = Double.parseDouble(jTextField6.getText());
-            
-            User selectedUser = null;
-            
-            ArrayList<User> users = UserController.RefreshUsers();
-            for (User user : users) {
-                if (user.getId() == userId && selectedUser == null) {
-                    selectedUser = user;
-                }
-            }
-            
-            if (selectedUser != null) {
-                Random random = new Random();
-                int first = random.nextInt(1000);
-                int second = random.nextInt(1000000);
-                int third = random.nextInt(100);
-                
-                String accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
-                
-                this.accounts.add(new Account(accountId, selectedUser, initialBalance));
-                
-                jTextField5.setText("");
-                jTextField6.setText("");
-            }*/
-            
-            Response response = AccountController.createAccount(jTextField5.getText(), jTextField6.getText());
-            
+        String userId = jTextField5.getText();
+        String initialBalance = jTextField6.getText();
+
+        Storage storage = Storage.getInstance();
+        Response response = AccountController.createAccount(userId, initialBalance);
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
             jTextField5.setText("");
             jTextField6.setText("");
-            
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
         }
+
     }//GEN-LAST:event_CreateAccountActionPerformed
 
     private void MakeTransactionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MakeTransactionActionPerformed
         // TODO add your handling code here:
-        try {
-            String type = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
-            switch (type) {
-                case "Deposit": {
-                    String sourceAccountId = jTextField7.getText();
-                    String destinationAccountId = jTextField8.getText();
-                    String amount = (jTextField9.getText());
-                    
-                    Response response = TransactionController.Deposit(TransactionType.DEPOSIT, null, destinationAccountId, amount);
-                    
-                    if (response.getStatus() >= 500) {
-                        JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
-                    } else if (response.getStatus() >= 400) {
-                        JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
-                    }
-                    
+       
+        String type = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
+        switch (type) {
+            case "Deposit": {
+                String sourceAccountId = jTextField7.getText();
+                String destinationAccountId = jTextField8.getText();
+                String amount = (jTextField9.getText());
+
+                Response response = TransactionController.Deposit(TransactionType.DEPOSIT, sourceAccountId, destinationAccountId, amount);
+
+                if (response.getStatus() >= 500) {
+                    JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+                } else if (response.getStatus() >= 400) {
+                    JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
                     jTextField7.setText("");
                     jTextField8.setText("");
                     jTextField9.setText("");
-                    
-                    break;
                 }
-                case "Withdraw": {
-                    String sourceAccountId = jTextField7.getText();
-                    double amount = Double.parseDouble(jTextField9.getText());
-                    
-                    Account sourceAccount = null;
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(sourceAccountId)) {
-                            sourceAccount = account;
-                        }
-                    }
-                    if (sourceAccount != null && sourceAccount.withdraw(amount)) {
-                        this.transactions.add(new Transaction(TransactionType.WITHDRAW, sourceAccount, null, amount));
-                        
-                        jTextField7.setText("");
-                        jTextField8.setText("");
-                        jTextField9.setText("");
-                    }
-                    break;
-                }
-                case "Transfer": {
-                    String sourceAccountId = jTextField7.getText();
-                    String destinationAccountId = jTextField8.getText();
-                    double amount = Double.parseDouble(jTextField9.getText());
-                    
-                    Account sourceAccount = null;
-                    Account destinationAccount = null;
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(sourceAccountId)) {
-                            sourceAccount = account;
-                        }
-                    }
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(destinationAccountId)) {
-                            destinationAccount = account;
-                        }
-                    }
-                    if (sourceAccount != null && destinationAccount != null && sourceAccount.withdraw(amount)) {
-                        destinationAccount.deposit(amount);
-                        
-                        this.transactions.add(new Transaction(TransactionType.TRANSFER, sourceAccount, destinationAccount, amount));
-                        
-                        jTextField7.setText("");
-                        jTextField8.setText("");
-                        jTextField9.setText("");
-                    }
-                    break;
-                }
-                default: {
-                    jTextField7.setText("");
-                    jTextField8.setText("");
-                    jTextField9.setText("");
-                    break;
-                }
+                
+                break;
             }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+            case "Withdraw": {
+                String sourceAccountId = jTextField7.getText();
+                String destinationAccountId = jTextField8.getText();
+                String amount = (jTextField9.getText());
+                
+                Response response = TransactionController.Withdraw(TransactionType.WITHDRAW, sourceAccountId, destinationAccountId, amount);
+
+                if (response.getStatus() >= 500) {
+                    JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+                } else if (response.getStatus() >= 400) {
+                    JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+                    jTextField7.setText("");
+                    jTextField8.setText("");
+                    jTextField9.setText("");
+                }
+                /*
+                Account sourceAccount = null;
+                for (Account account : this.accounts) {
+                    if (account.getId().equals(sourceAccountId)) {
+                        sourceAccount = account;
+                    }
+                }
+                if (sourceAccount != null && sourceAccount.withdraw(amount)) {
+                    this.transactions.add(new Transaction(TransactionType.WITHDRAW, sourceAccount, null, amount));
+
+                    jTextField7.setText("");
+                    jTextField8.setText("");
+                    jTextField9.setText("");
+                }*/
+                break;
+            }
+            case "Transfer": {
+                String sourceAccountId = jTextField7.getText();
+                String destinationAccountId = jTextField8.getText();
+                String amount = (jTextField9.getText());
+                
+                Response response = TransactionController.Transfer(TransactionType.TRANSFER, sourceAccountId, destinationAccountId, amount);
+                
+                if (response.getStatus() >= 500) {
+                    JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+                } else if (response.getStatus() >= 400) {
+                    JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+                    jTextField7.setText("");
+                    jTextField8.setText("");
+                    jTextField9.setText("");
+                }
+                
+                /*
+                Account sourceAccount = null;
+                Account destinationAccount = null;
+                for (Account account : this.accounts) {
+                    if (account.getId().equals(sourceAccountId)) {
+                        sourceAccount = account;
+                    }
+                }
+                for (Account account : this.accounts) {
+                    if (account.getId().equals(destinationAccountId)) {
+                        destinationAccount = account;
+                    }
+                }
+                if (sourceAccount != null && destinationAccount != null && sourceAccount.withdraw(amount)) {
+                    destinationAccount.deposit(amount);
+
+                    this.transactions.add(new Transaction(TransactionType.TRANSFER, sourceAccount, destinationAccount, amount));
+
+                    jTextField7.setText("");
+                    jTextField8.setText("");
+                    jTextField9.setText("");
+                }*/
+                break;
+            }
+            default: {
+                jTextField7.setText("");
+                jTextField8.setText("");
+                jTextField9.setText("");
+                break;
+            }
         }
+        
     }//GEN-LAST:event_MakeTransactionActionPerformed
 
     private void RefreshUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshUsersActionPerformed
@@ -690,7 +693,6 @@ public class BankFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_RefreshUsersActionPerformed
 
     private void RefreshAccountsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshAccountsActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
         
