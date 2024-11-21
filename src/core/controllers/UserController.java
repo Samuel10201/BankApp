@@ -19,11 +19,19 @@ public class UserController {
         try{
             int idInt, ageInt;
             
+            if(id.equals("")){
+                return new Response("Id must not be empty",Status.BAD_REQUEST);
+            }
+            
             try{
                 idInt=Integer.parseInt(id);
-                if(idInt<0 && idInt>999999999){
-                    return new Response("Id must be positive and not longer than 9 digits", Status.BAD_REQUEST);
+                if(idInt<0 ){
+                    return new Response("Id must be positive", Status.BAD_REQUEST);
                 }
+                if ( idInt>999999999) {
+                    return new Response("Id must be no longer than 9 digits", Status.BAD_REQUEST);
+                }
+                
             }catch(NumberFormatException ex){
                 return new Response("Id must be numeric", Status .BAD_REQUEST);
             }
@@ -34,6 +42,10 @@ public class UserController {
             
             if(lastName.equals("")){
                 return new Response("Lastname must not be empty",Status.BAD_REQUEST);
+            }
+            
+            if(age.equals("")){
+                return new Response("Age must not be empty",Status.BAD_REQUEST);
             }
             
             try{

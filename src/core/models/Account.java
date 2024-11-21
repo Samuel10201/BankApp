@@ -16,11 +16,6 @@ public class Account {
     private User owner;
     private double balance;
 
-    public Account(User owner) {
-        this.owner = owner;
-    }
-
-    
     public Account(String id, User owner) {
         this.id = id;
         this.owner = owner;
@@ -48,17 +43,9 @@ public class Account {
     public double getBalance() {
         return balance;
     }
-    
-    public void deposit(double amount) {
-        this.balance += amount;
-    }
-    
-    public boolean withdraw(double amount) {
-        if (amount > this.balance) {
-            return false;
-        }
-        this.balance -= amount;
-        return true;
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
     
 }
