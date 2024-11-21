@@ -5,17 +5,18 @@
 package core.views;
 
 import core.controllers.AccountController;
-import core.controllers.TransactionController;
+import core.controllers.transaction.TransactionController;
 import core.controllers.UserController;
+import core.controllers.transaction.DepositController;
+import core.controllers.transaction.TransferController;
+import core.controllers.transaction.WithdrawController;
 import core.controllers.utils.Response;
 import core.models.Account;
 import core.models.Transaction;
 import core.models.TransactionType;
 import core.models.User;
-import core.models.storage.Storage;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -527,7 +528,7 @@ public class BankFrame extends javax.swing.JFrame {
         String lastname = jTextField3.getText();
         String age = (jTextField4.getText());
 
-        Response response = UserController.RegisterUser(id, firstname, lastname, age);
+        Response response = UserController.registerUser(id, firstname, lastname, age);
 
 
         if (response.getStatus() >= 500) {
@@ -550,7 +551,6 @@ public class BankFrame extends javax.swing.JFrame {
         String userId = jTextField5.getText();
         String initialBalance = jTextField6.getText();
 
-        Storage storage = Storage.getInstance();
         Response response = AccountController.createAccount(userId, initialBalance);
         if (response.getStatus() >= 500) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
@@ -573,7 +573,7 @@ public class BankFrame extends javax.swing.JFrame {
                 String destinationAccountId = jTextField8.getText();
                 String amount = (jTextField9.getText());
 
-                Response response = TransactionController.Deposit(TransactionType.DEPOSIT, sourceAccountId, destinationAccountId, amount);
+                Response response = DepositController.deposit(TransactionType.DEPOSIT, sourceAccountId, destinationAccountId, amount);
 
                 if (response.getStatus() >= 500) {
                     JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
@@ -593,7 +593,7 @@ public class BankFrame extends javax.swing.JFrame {
                 String destinationAccountId = jTextField8.getText();
                 String amount = (jTextField9.getText());
                 
-                Response response = TransactionController.Withdraw(TransactionType.WITHDRAW, sourceAccountId, destinationAccountId, amount);
+                Response response = WithdrawController.withdraw(TransactionType.WITHDRAW, sourceAccountId, destinationAccountId, amount);
 
                 if (response.getStatus() >= 500) {
                     JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
@@ -613,7 +613,7 @@ public class BankFrame extends javax.swing.JFrame {
                 String destinationAccountId = jTextField8.getText();
                 String amount = (jTextField9.getText());
                 
-                Response response = TransactionController.Transfer(TransactionType.TRANSFER, sourceAccountId, destinationAccountId, amount);
+                Response response = TransferController.transfer(TransactionType.TRANSFER, sourceAccountId, destinationAccountId, amount);
                 
                 if (response.getStatus() >= 500) {
                     JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
@@ -642,7 +642,7 @@ public class BankFrame extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
         
-        ArrayList<User> users = UserController.RefreshUsers();
+        ArrayList<User> users = (ArrayList<User>) UserController.refreshUsers().getObject();
         users.sort((obj1, obj2) -> (obj1.getId() - obj2.getId()));
         
         for (User user : users) {
@@ -656,7 +656,7 @@ public class BankFrame extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
         
-        ArrayList<Account> accounts = AccountController.refreshAccounts();
+        ArrayList<Account> accounts = (ArrayList<Account>) AccountController.refreshAccounts().getObject();
         accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
         
         for (Account account : accounts) {
@@ -668,7 +668,7 @@ public class BankFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
         model.setRowCount(0);
-        ArrayList<Transaction> transactions = TransactionController.RefreshTransaction();
+        ArrayList<Transaction> transactions = (ArrayList<Transaction>) TransactionController.refreshTransaction().getObject();
         ArrayList<Transaction> transactionsCopy = (ArrayList<Transaction>) transactions.clone();
         Collections.reverse(transactionsCopy);
         

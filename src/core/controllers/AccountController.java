@@ -85,10 +85,8 @@ public class AccountController {
         }
     }
     
-    public static ArrayList<Account> refreshAccounts(){
+    public static Response refreshAccounts(){
         Storage storage = Storage.getInstance();
-        ArrayList<Account> accounts = new ArrayList<>();
-        accounts = storage.getAccounts();
-        return accounts;
+        return new Response(storage.getAccounts());
     }
 }

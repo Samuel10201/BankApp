@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * @author familiavasquezbarragan
  */
 public class UserController {
-    public static Response RegisterUser(String id, String firstName, String lastName, String age){
+    public static Response registerUser(String id, String firstName, String lastName, String age){
         try{
             int idInt, ageInt;
             
@@ -69,10 +69,9 @@ public class UserController {
         
     }
     
-    public static ArrayList<User> RefreshUsers(){
+    public static Response refreshUsers(){
         Storage storage = Storage.getInstance();
-        ArrayList<User> users = new ArrayList<>();
-        users = storage.getUsers();
-        return users;
+        ArrayList<User> users = storage.getUsers();
+        return new Response(users);
     }
 }
