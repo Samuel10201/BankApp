@@ -46,10 +46,7 @@ public class AccountController {
             try{
                 initialBalanceDouble = Double.parseDouble(initialBalance);
                 if(initialBalanceDouble < 0){
-                    return new Response("Initial balance most be positive", Status.BAD_REQUEST);
-                }
-                if (initialBalanceDouble == 0) {
-                    return new Response("Initial balance most be more than 0", Status.BAD_REQUEST);
+                    return new Response("Initial balance most be positive or 0", Status.BAD_REQUEST);
                 }
             }catch(NumberFormatException ex){
                 return new Response("Initial balance must be numeric", Status.BAD_REQUEST);
@@ -58,24 +55,14 @@ public class AccountController {
             
             
             Storage storage = Storage.getInstance();
+           
+            boolean valid = storage.addAccount(storage.createId(), userId, initialBalanceDouble);
             
-            Random random = new Random();
-            int first = random.nextInt(1000);
-            int second = random.nextInt(1000000);
-            int third = random.nextInt(100);
-            String accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
-            
-            int valid = storage.addAccount(accountId, userId, initialBalanceDouble);
-            
-            if(valid == 1){
-                return new Response("The id of that account already exists", Status.BAD_REQUEST);
-            }
-            
-            if(valid == 2){
+            if(!valid){
                 return new Response("The user you want to assign the account do not exists", Status.BAD_REQUEST);
             }
             
-            if(valid == 0){
+            if(valid){
                 return new Response("Account created succesfully", Status.CREATED);
             }
             return new Response("Account created succesfully", Status.CREATED);

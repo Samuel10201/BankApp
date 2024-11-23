@@ -4,6 +4,7 @@ import core.models.Account;
 import core.models.Transaction;
 import core.models.User;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -54,8 +55,8 @@ public class Storage {
         return null;
     }
     
-    public int addAccount(String idAccount ,String idUsuario, double initialBalance){      
-        // 0 = correcto, 1 = El id de cuenta ya existe, 2 = el usuario no existe
+    public boolean addAccount(String idAccount ,String idUsuario, double initialBalance){      
+        // 0 = correcto, 2 = el usuario no existe
         int sw = 0;
         for(User user : this.users){
             if (user.getId() == Integer.parseInt(idUsuario)) {
@@ -63,11 +64,11 @@ public class Storage {
             }
         }
         if(sw == 0){
-            return 2;
+            return false;
         }
         Account account = new Account(idAccount,this.getUser(Integer.parseInt(idUsuario)),initialBalance);
         this.accounts.add(account);
-        return 0;
+        return true;
     }
     
     public Account getAccount(String id){
@@ -83,6 +84,40 @@ public class Storage {
         return accounts;
     }
 
+    public String createId(){
+        
+        int sw = 0;
+        String accountId = "";
+        
+        while(sw == 0){
+            Random random = new Random();
+            int first = random.nextInt(1000);
+            int second = random.nextInt(1000000);
+            int third = random.nextInt(100);
+
+            accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
+
+            if(this.validId(accountId)){
+                sw = 1;
+            }
+        }
+        
+        return accountId;
+        
+    }
+    
+    public boolean validId(String idAccount){
+        for (Account account : this.accounts) {
+            if(account.getId() == idAccount){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    
+    
+    
     
     public boolean Deposit(Transaction transaction){
         this.transactions.add(transaction);
@@ -102,6 +137,7 @@ public class Storage {
     public ArrayList<Transaction> getTransactions() {
         return transactions;
     }
+    
     
 }
 
