@@ -7,6 +7,7 @@ package core.controllers;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
+import core.models.User;
 import core.models.storage.Storage;
 import java.util.ArrayList;
 import java.util.Random;
@@ -74,6 +75,8 @@ public class AccountController {
     
     public static Response refreshAccounts(){
         Storage storage = Storage.getInstance();
-        return new Response(storage.getAccounts());
+        ArrayList<Account> accounts = storage.getAccounts();
+        accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
+        return new Response(accounts);
     }
 }

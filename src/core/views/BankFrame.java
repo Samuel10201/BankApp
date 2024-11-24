@@ -643,7 +643,7 @@ public class BankFrame extends javax.swing.JFrame {
         model.setRowCount(0);
         
         ArrayList<User> users = (ArrayList<User>) UserController.refreshUsers().getObject();
-        users.sort((obj1, obj2) -> (obj1.getId() - obj2.getId()));
+        
         
         for (User user : users) {
 
@@ -657,7 +657,7 @@ public class BankFrame extends javax.swing.JFrame {
         model.setRowCount(0);
         
         ArrayList<Account> accounts = (ArrayList<Account>) AccountController.refreshAccounts().getObject();
-        accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
+        
         
         for (Account account : accounts) {
             model.addRow(new Object[]{account.getId(), account.getOwner().getId(), account.getBalance()});
@@ -669,10 +669,9 @@ public class BankFrame extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
         model.setRowCount(0);
         ArrayList<Transaction> transactions = (ArrayList<Transaction>) TransactionController.refreshTransaction().getObject();
-        ArrayList<Transaction> transactionsCopy = (ArrayList<Transaction>) transactions.clone();
-        Collections.reverse(transactionsCopy);
         
-        for (Transaction transaction : transactionsCopy) {
+        
+        for (Transaction transaction : transactions) {
             model.addRow(new Object[]{transaction.getType().name(), (transaction.getSourceAccount() != null ? transaction.getSourceAccount().getId() : "None"), (transaction.getDestinationAccount()!= null ? transaction.getDestinationAccount().getId() : "None"), transaction.getAmount()});
         }
     }//GEN-LAST:event_RefreshTransactionsActionPerformed

@@ -79,6 +79,7 @@ public class UserController {
     public static Response refreshUsers(){
         Storage storage = Storage.getInstance();
         ArrayList<User> users = storage.getUsers();
+        users.sort((obj1, obj2) -> (obj1.getId() - obj2.getId()));
         return new Response(users);
     }
 }
